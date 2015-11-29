@@ -25,6 +25,7 @@ type Config struct {
 	RefreshTtl      int
 	RefreshInterval int
 	DeregisterCheck string
+	OverlayNet      string
 }
 
 type Service struct {

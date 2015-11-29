@@ -157,6 +157,7 @@ func (b *Bridge) add(containerId string, quiet bool) {
 			}
 			continue
 		}
+
 		service := b.newService(port, len(ports) > 1)
 		if service == nil {
 			if !quiet {
@@ -211,7 +212,13 @@ func (b *Bridge) newService(port ServicePort, isgroup bool) *Service {
 	}
 	var p int
 	if b.config.Internal == true {
-		service.IP = port.ExposedIP
+
+		if b.config.OverlayNet == "" {
+			service.IP = port.ExposedIP
+		} else {
+			service.IP = container.NetworkSettings.Networks[b.config.OverlayNet].IPAddress
+		}
+
 		p, _ = strconv.Atoi(port.ExposedPort)
 	} else {
 		service.IP = port.HostIP
